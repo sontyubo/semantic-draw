@@ -1,7 +1,8 @@
 <div align="center">
 
-<h1>StreamMultiDiffusion: Real-Time Interactive Generation</br>with Region-Based Semantic Control</h1>
-<h4>🔥🔥🔥 Now Supports Stable Diffusion 3 🔥🔥🔥</h4>
+<h1>SemanticDraw: Towards Real-Time Interactive Content Creation from Image Diffusion Models</h1>
+<h4>🔥🔥🔥 Accepted on CVPR 2025 🔥🔥🔥</h4>
+<p>Previously <em>StreamMultiDiffusion: Real-Time Interactive Generation</br>with Region-Based Semantic Control</em></p>
 
 | ![mask](./assets/fantasy_large/fantasy_large_full.png) | ![result](./assets/fantasy_large_sd3_generation.png) |
 | :----------------------------: | :----------------------------: |
@@ -17,7 +18,7 @@
 
 [![Project](https://img.shields.io/badge/Project-Page-green)](https://jaerinlee.com/research/streammultidiffusion)
 [![ArXiv](https://img.shields.io/badge/Arxiv-2403.09055-red)](https://arxiv.org/abs/2403.09055)
-[![Github](https://img.shields.io/github/stars/ironjr/StreamMultiDiffusion)](https://github.com/ironjr/StreamMultiDiffusion)
+[![Github](https://img.shields.io/github/stars/ironjr/StreamMultiDiffusion)](https://github.com/ironjr/semantic-draw)
 [![X](https://img.shields.io/twitter/url?label=_ironjr_&url=https%3A%2F%2Ftwitter.com%2F_ironjr_)](https://twitter.com/_ironjr_)
 [![LICENSE](https://img.shields.io/badge/license-MIT-lightgrey)](https://github.com/ironjr/StreamMultiDiffusion/blob/main/LICENSE)
 [![HFPaper](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Paper-yellow)](https://huggingface.co/papers/2403.09055)
@@ -34,7 +35,7 @@
   <img src="./assets/figure_one.png" width=100%>
 </p>
 
-tl;dr: StreamMultiDiffusion is a *real-time* *interactive* *multiple*-text-to-image generation from user-assigned *regional* text prompts.
+tl;dr: SemanticDraw is a *real-time* *interactive* *multiple*-text-to-image generation from user-assigned *regional* text prompts.
 In other words, **you can now draw ✍️ using brushes 🖌️ that paints *meanings* 🧠 in addition to *colors*** 🌈!
 
 <details>
@@ -100,10 +101,11 @@ However, we have decreased the latency **from an hour to a minute**, making the 
 
 ![demo_v2](./assets/demo_v2.gif)
 
-- 🔥 June 24, 2024: We have launched our demo of Semantic Palette for vanilla **Stable Diffusion 3** in the Hugging Face 🤗 Space [here](https://huggingface.co/spaces/ironjr/SemanticPalette3)! If you want to run this in your local, we also provided code in this repository: see [here](https://github.com/ironjr/StreamMultiDiffusion/tree/main/demo/semantic_palette_sd3). Make sure to have enough VRAM!
-- 🔥 June 22, 2024: We now support [Stable Diffusion 3](https://huggingface.co/stabilityai/stable-diffusion-3-medium) powered by [Flash Diffusion](https://huggingface.co/jasperai/flash-sd3)! Installation guide is updated for SD3. See [notebooks](https://github.com/ironjr/StreamMultiDiffusion/tree/main/notebooks) directory for the newly updated Jupyter notebook demo.
+- 🔥 February 26, 2025: Semantic Draw (previously StreamMultiDiffusion) is accepted to CVPR 2025!
+- ✅ June 24, 2024: We have launched our demo of Semantic Palette for vanilla **Stable Diffusion 3** in the Hugging Face 🤗 Space [here](https://huggingface.co/spaces/ironjr/SemanticPalette3)! If you want to run this in your local, we also provided code in this repository: see [here](https://github.com/ironjr/semantic-draw/tree/main/demo/semantic_palette_sd3). Make sure to have enough VRAM!
+- ✅ June 22, 2024: We now support [Stable Diffusion 3](https://huggingface.co/stabilityai/stable-diffusion-3-medium) powered by [Flash Diffusion](https://huggingface.co/jasperai/flash-sd3)! Installation guide is updated for SD3. See [notebooks](https://github.com/ironjr/semantic-draw/tree/main/notebooks) directory for the newly updated Jupyter notebook demo.
 - ✅ April 30, 2024: Real-time interactive generation demo is now published at [Hugging Face Space](https://huggingface.co/spaces/ironjr/StreamMultiDiffusion)!
-- ✅ April 23, 2024: Real-time interactive generation demo is updated to [version 2](https://github.com/ironjr/StreamMultiDiffusion/tree/main/demo/stream_v2)! We now have fully responsive interface with `gradio.ImageEditor`. Huge thanks to [@pngwn](https://github.com/pngwn) and Hugging Face 🤗 Gradio team for the [great update (4.27)](https://www.gradio.app/changelog#4-27-0)!
+- ✅ April 23, 2024: Real-time interactive generation demo is updated to [version 2](https://github.com/ironjr/semantic-draw/tree/main/demo/stream_v2)! We now have fully responsive interface with `gradio.ImageEditor`. Huge thanks to [@pngwn](https://github.com/pngwn) and Hugging Face 🤗 Gradio team for the [great update (4.27)](https://www.gradio.app/changelog#4-27-0)!
 - ✅ March 24, 2024: Our new demo app _Semantic Palette SDXL_ is out at [Hugging Face Space](https://huggingface.co/spaces/ironjr/SemanticPaletteXL)! Great thanks to [Cagliostro Research Lab](https://cagliostrolab.net/) for the permission of [Animagine XL 3.1](https://huggingface.co/cagliostrolab/animagine-xl-3.1) model used in the demo!
 - ✅ March 24, 2024: We now (experimentally) support SDXL with [Lightning LoRA](https://huggingface.co/ByteDance/SDXL-Lightning) in our semantic palette demo! Streaming type with SDXL-Lighning is under development.
 - ✅ March 23, 2024: We now support `.safetensors` type models. Please see the instructions in Usage section.
@@ -125,7 +127,7 @@ git clone https://github.com/ironjr/StreamMultiDiffusion
 pip install -r requirements.txt
 ```
 
-### For SD3 (🔥NEW!!!)
+### For SD3
 
 We now support Stable Diffusion 3. To enable the feature, in addition to above installation code, enter the following code in your terminal.
 
@@ -133,13 +135,13 @@ We now support Stable Diffusion 3. To enable the feature, in addition to above i
 pip install git+https://github.com/initml/diffusers.git@clement/feature/flash_sd3
 ```
 
-This will allow you to use [Flash Diffusion for SD3](https://huggingface.co/jasperai/flash-sd3). For using SD3 pipelines, please refer to newly updated Jupyter demos in the [notebooks](https://github.com/ironjr/StreamMultiDiffusion/tree/main/notebooks) directory.
+This will allow you to use [Flash Diffusion for SD3](https://huggingface.co/jasperai/flash-sd3). For using SD3 pipelines, please refer to newly updated Jupyter demos in the [notebooks](https://github.com/ironjr/semantic-draw/tree/main/notebooks) directory.
 
 ## ⚡ Usage
 
 ### Overview
 
-StreamMultiDiffusion is served in serveral different forms.
+SemanticDraw is served in serveral different forms.
 
 1. The main GUI demo powered by Gradio is available at `demo/stream_v2/app.py`. Just type the below line in your command prompt and open `https://localhost:8000` with any web browser will launch the app.
 
@@ -169,7 +171,7 @@ python app.py --model "your stable diffusion 1.5 checkpoint" --height 512 --widt
 
 ---
 
-### Demo Application (StreamMultiDiffusion)
+### Demo Application (SemanticDraw)
 
 <p align="center">
   <img src="./assets/demo_v2.gif" width=90%>
@@ -287,7 +289,7 @@ I have provided more tips in using the app in another twitter [thread](https://t
 
 ### Basic Usage (Python)
 
-The main python modules in our project is two-fold: (1) [`model.StableMultiDiffusionPipeline`](https://github.com/ironjr/StreamMultiDiffusion/blob/main/src/model/stablemultidiffusion_pipeline.py) for single-call generation (might be more preferable for CLI users), and (2) [`model.StreamMultiDiffusion`](https://github.com/ironjr/StreamMultiDiffusion/blob/main/src/model/streammultidiffusion.py) for streaming application such as the [one](https://github.com/ironjr/StreamMultiDiffusion/blob/main/src/app.py) in the main figure of this README page.
+The main python modules in our project is two-fold: (1) [`model.StableMultiDiffusionPipeline`](https://github.com/ironjr/semantic-draw/blob/main/src/model/stablemultidiffusion_pipeline.py) for single-call generation (might be more preferable for CLI users), and (2) [`model.StreamMultiDiffusion`](https://github.com/ironjr/semantic-draw/blob/main/src/model/streammultidiffusion.py) for streaming application such as the [one](https://github.com/ironjr/semantic-draw/blob/main/src/app.py) in the main figure of this README page.
 We provide minimal examples for the possible applications below.
 
 
@@ -342,7 +344,7 @@ smd = StreamMultiDiffusion(
 # Load the masks.
 masks = []
 for i in range(1, 3):
-    url = f'https://raw.githubusercontent.com/ironjr/StreamMultiDiffusion/main/assets/zeus/prompt_p{i}.png'
+    url = f'https://raw.githubusercontent.com/ironjr/semantic-draw/main/assets/zeus/prompt_p{i}.png'
     response = requests.get(url)
     mask = Image.open(BytesIO(response.content)).convert('RGBA')
     mask = (T.ToTensor()(mask)[-1:] > 0.5).float()
@@ -470,7 +472,7 @@ negative_prompts = [negative_prompt_prefix + ', ' + p for p in negative_prompts]
 # Load masks.
 masks = []
 for i in range(1, 3):
-    url = f'https://raw.githubusercontent.com/ironjr/StreamMultiDiffusion/main/assets/timessquare/timessquare_{i}.png'
+    url = f'https://raw.githubusercontent.com/ironjr/semantic-draw/main/assets/timessquare/timessquare_{i}.png'
     response = requests.get(url)
     mask = Image.open(BytesIO(response.content)).convert('RGBA')
     mask = (T.ToTensor()(mask)[-1:] > 0.5).float()
@@ -567,7 +569,7 @@ prompts, negative_prompts = preprocess_prompts(
 # Load masks.
 masks = []
 for i in range(1, 3):
-    url = f'https://raw.githubusercontent.com/ironjr/StreamMultiDiffusion/main/assets/fantasy_large/fantasy_large_{i}.png'
+    url = f'https://raw.githubusercontent.com/ironjr/semantic-draw/main/assets/fantasy_large/fantasy_large_{i}.png'
     response = requests.get(url)
     mask = Image.open(BytesIO(response.content)).convert('RGBA')
     mask = (T.ToTensor()(mask)[-1:] > 0.5).float()
@@ -673,7 +675,7 @@ prompts, negative_prompts = preprocess_prompts(
 # Load masks.
 masks = []
 for i in range(1, 3):
-    url = f'https://raw.githubusercontent.com/ironjr/StreamMultiDiffusion/main/assets/fantasy_large/fantasy_large_{i}.png'
+    url = f'https://raw.githubusercontent.com/ironjr/semantic-draw/main/assets/fantasy_large/fantasy_large_{i}.png'
     response = requests.get(url)
     mask = Image.open(BytesIO(response.content)).convert('RGBA')
     mask = (T.ToTensor()(mask)[-1:] > 0.5).float()
@@ -756,7 +758,7 @@ negative_prompts = ['worst quality, bad quality, normal quality, cropped, framed
 # Load masks.
 masks = []
 for i in range(1, 9):
-    url = f'https://raw.githubusercontent.com/ironjr/StreamMultiDiffusion/main/assets/irworobongdo/irworobongdo_{i}.png'
+    url = f'https://raw.githubusercontent.com/ironjr/semantic-draw/main/assets/irworobongdo/irworobongdo_{i}.png'
     response = requests.get(url)
     mask = Image.open(BytesIO(response.content)).convert('RGBA')
     mask = (T.ToTensor()(mask)[-1:] > 0.5).float()
@@ -829,7 +831,7 @@ smd = StableMultiDiffusionPipeline(
 #   it to the same checkpoint for an image-to-image pipeline with denoising_strength 0.2)
 #   for the maximally harmonized results!
 #   However, in this example, we choose to use a real-world image for the demo.
-url = f'https://raw.githubusercontent.com/ironjr/StreamMultiDiffusion/main/assets/timessquare/timessquare.jpeg'
+url = f'https://raw.githubusercontent.com/ironjr/semantic-draw/main/assets/timessquare/timessquare.jpeg'
 response = requests.get(url)
 background_image = Image.open(BytesIO(response.content)).convert('RGB')
 
@@ -851,7 +853,7 @@ background_negative_prompt = negative_prompt_prefix
 # Load masks.
 masks = []
 for i in range(1, 3):
-    url = f'https://raw.githubusercontent.com/ironjr/StreamMultiDiffusion/main/assets/timessquare/timessquare_{i}.png'
+    url = f'https://raw.githubusercontent.com/ironjr/semantic-draw/main/assets/timessquare/timessquare_{i}.png'
     response = requests.get(url)
     mask = Image.open(BytesIO(response.content)).convert('RGBA')
     mask = (T.ToTensor()(mask)[-1:] > 0.5).float()
@@ -883,7 +885,7 @@ image.save('my_beautiful_inpainting.png')
 
 ### Panorama Generation
 
-Our [`model.StableMultiDiffusionPipeline`](https://github.com/ironjr/StreamMultiDiffusion/blob/main/src/model/stablemultidiffusion_pipeline.py) supports x10 faster generation of irregularly large size images such as panoramas.
+Our [`model.StableMultiDiffusionPipeline`](https://github.com/ironjr/semantic-draw/blob/main/src/model/stablemultidiffusion_pipeline.py) supports x10 faster generation of irregularly large size images such as panoramas.
 For example, the following code runs in 10s with a single 2080 Ti GPU.
 
 **Result:**
@@ -1005,7 +1007,7 @@ We couldn't find a good preexisting name for this type of user interface, so we 
 Of course. Both types of models are supported.
 For realistic models and SDXL-type models, using `--bootstrap_steps=2` or `3` produces better (non-cropped) images.
 
-https://github.com/ironjr/StreamMultiDiffusion/assets/12259041/9a6bb02b-7dca-4dd0-a1bc-6153dde1571d
+https://github.com/ironjr/semantic-draw/assets/12259041/9a6bb02b-7dca-4dd0-a1bc-6153dde1571d
 
 
 ## 🌏 Citation
@@ -1013,17 +1015,17 @@ https://github.com/ironjr/StreamMultiDiffusion/assets/12259041/9a6bb02b-7dca-4dd
 Please cite us if you find our project useful!
 
 ```latex
-@article{lee2024streammultidiffusion,
-    title={{StreamMultiDiffusion:} Real-Time Interactive Generation with Region-Based Semantic Control},
+@inproceedings{lee2025semanticdraw,
+    title={{SemanticDraw:} Towards Real-Time Interactive Content Creation from Image Diffusion Models},
     author={Lee, Jaerin and Jung, Daniel Sungho and Lee, Kanggeon and Lee, Kyoung Mu},
-    journal={arXiv preprint arXiv:2403.09055},
-    year={2024}
+    booktitle={CVPR},
+    year={2025}
 }
 ```
 
 ## 🚨 Notice
 
-Please note that we do not host separate pages for this project other than our [official project page](https://jaerinlee.com/research/streammultidiffusion) and [hugging face](https://huggingface.co/spaces/ironjr/SemanticPalette) [space demos](https://huggingface.co/spaces/ironjr/SemanticPaletteXL).
+Please note that we do not host separate pages for this project other than our [official project page](https://jaerinlee.com/research/semantic-draw) and [hugging face](https://huggingface.co/spaces/ironjr/SemanticPalette) [space demos](https://huggingface.co/spaces/ironjr/SemanticPaletteXL).
 For example [https://streammultidiffusion.net](https://streammultidiffusion.net/) is not related to us!
 (By the way thanks for hosting)
 
