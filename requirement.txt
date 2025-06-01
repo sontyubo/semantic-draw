@@ -1,0 +1,16 @@
+torch
+torchvision
+xformers
+einops
+transformers[torch]
+huggingface_hub[torch]
+Pillow
+emoji
+numpy
+tqdm
+jupyterlab
+gradio
+peft
+sentencepiece
+protobuf
+git+https://github.com/initml/diffusers.git@clement/feature/flash_sd3

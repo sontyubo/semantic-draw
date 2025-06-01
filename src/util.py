@@ -27,7 +27,6 @@ import numpy as np
 
 import torch
 import torch.nn.functional as F
-import torch.cuda.amp as amp
 import torchvision.transforms as T
 import torchvision.transforms.functional as TF
 
@@ -125,7 +124,6 @@ def filter_2d_by_kernel_2d(x: torch.Tensor, k: torch.Tensor) -> torch.Tensor:
     return x
 
 
-@amp.autocast(False)
 def filter_by_kernel(
     x: torch.Tensor,
     k: torch.Tensor,

@@ -19,10 +19,10 @@
 # SOFTWARE.
 
 from model import (
-    StableMultiDiffusionPipeline,
-    StableMultiDiffusionSDXLPipeline,
-    StableMultiDiffusion3Pipeline,
-    StreamMultiDiffusion,
-    StreamMultiDiffusionSDXL,
-    StreamMultiDiffusion3,
+    SemanticDrawPipeline,
+    SemanticDrawSDXLPipeline,
+    SemanticDraw3Pipeline,
+    SemanticDraw,
+    SemanticDrawSDXL,
+    SemanticDraw3,
 )
