@@ -4,7 +4,7 @@
 <h4><b>CVPR 2025</b></h4>
 <p>Previously <em>StreamMultiDiffusion: Real-Time Interactive Generation</br>with Region-Based Semantic Control</em></p>
 
-| ![mask](./assets/demo_app_nostream.gif) | ![result](./assets/demo_app_stream.gif) |
+| ![mask](./assets/demo_app_nostream.gif) | ![result](./assets/demo_app.gif) |
 | :----------------------------: | :----------------------------: |
 | Draw multiple prompt-masks in a large canvas | Real-time creation |
 
