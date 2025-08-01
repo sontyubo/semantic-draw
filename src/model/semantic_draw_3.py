@@ -18,30 +18,23 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from transformers import Blip2Processor, Blip2ForConditionalGeneration
-from diffusers import AutoencoderTiny
-from diffusers.models.transformers import SD3Transformer2DModel
-from diffusers.pipelines.stable_diffusion_3 import StableDiffusion3Pipeline, StableDiffusion3PipelineOutput
-from diffusers.schedulers import (
-    FlowMatchEulerDiscreteScheduler,
-    FlashFlowMatchEulerDiscreteScheduler,
-)
-from huggingface_hub import hf_hub_download
-from peft import PeftModel
+from collections import deque
+from typing import List, Literal, Optional, Tuple, Union
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torchvision.transforms as T
+from diffusers import AutoencoderTiny
+from diffusers.models.transformers import SD3Transformer2DModel
+from diffusers.pipelines.stable_diffusion_3 import StableDiffusion3Pipeline
 from einops import rearrange
-
-import random
-from collections import deque
-from typing import Tuple, List, Literal, Optional, Union
+from peft import PeftModel
 from PIL import Image
+from transformers import Blip2ForConditionalGeneration, Blip2Processor
 
-from util import load_model, gaussian_lowpass, shift_to_mask_bbox_center
-from data import BackgroundObject, LayerObject, BackgroundState #, LayerState
+from data import BackgroundObject, BackgroundState, LayerObject  #, LayerState
+from util import gaussian_lowpass, shift_to_mask_bbox_center
 
 
 # Copied from diffusers.pipelines.stable_diffusion.pipeline_stable_diffusion.rescale_noise_cfg
@@ -139,7 +132,7 @@ class SemanticDraw3(nn.Module):
             'layers': deque(maxlen=prompt_queue_capacity), # Maintains a queue of LayerObjects
         }
 
-        print(f'[INFO]     Loading Stable Diffusion...')
+        print('[INFO]     Loading Stable Diffusion...')
         get_scheduler = lambda pipe: FlashFlowMatchEulerDiscreteScheduler.from_pretrained(
             "stabilityai/stable-diffusion-3-medium-diffusers", subfolder="scheduler")
 
@@ -225,13 +218,13 @@ class SemanticDraw3(nn.Module):
         else:
             self.trt_transformer_batch_size = self.denoising_steps_num * frame_buffer_size
 
-        print(f'[INFO]     Model is loaded!')
+        print('[INFO]     Model is loaded!')
 
         self.reset_seed(self.generator, seed)
         self.reset_latent()
         self.prepare()
 
-        print(f'[INFO]     Parameters prepared!')
+        print('[INFO]     Parameters prepared!')
 
         self.ready_checklist['initialized'] = True
 

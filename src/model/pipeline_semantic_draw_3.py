@@ -18,59 +18,29 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import inspect
-from typing import Any, Callable, Dict, List, Literal, Tuple, Optional, Union
-from tqdm import tqdm
-from PIL import Image
+from typing import Any, Dict, List, Literal, Optional, Tuple, Union
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torchvision.transforms as T
-from einops import rearrange
-
-from transformers import (
-    CLIPTextModelWithProjection,
-    CLIPTokenizer,
-    T5EncoderModel,
-    T5TokenizerFast,
+from diffusers import (
+    StableDiffusion3Pipeline,
 )
-from transformers import Blip2Processor, Blip2ForConditionalGeneration
-
-from diffusers.image_processor import VaeImageProcessor
-from diffusers.loaders import FromSingleFileMixin, SD3LoraLoaderMixin
-from diffusers.models.attention_processor import (
-    AttnProcessor2_0,
-    FusedAttnProcessor2_0,
-    LoRAAttnProcessor2_0,
-    LoRAXFormersAttnProcessor,
-    XFormersAttnProcessor,
-)
-from diffusers.models.autoencoders import AutoencoderKL
 from diffusers.models.transformers import SD3Transformer2DModel
-from diffusers.pipelines.stable_diffusion_3 import StableDiffusion3PipelineOutput
-from diffusers.schedulers import (
-    FlowMatchEulerDiscreteScheduler,
-    FlashFlowMatchEulerDiscreteScheduler,
-)
 from diffusers.utils import (
     is_torch_xla_available,
     logging,
-    replace_example_docstring,
 )
-from diffusers.utils.torch_utils import randn_tensor
-from diffusers import (
-    DiffusionPipeline, 
-    StableDiffusion3Pipeline,
-)
-
+from einops import rearrange
 from peft import PeftModel
+from PIL import Image
+from tqdm import tqdm
+from transformers import Blip2ForConditionalGeneration, Blip2Processor
 
-from util import load_model, gaussian_lowpass, blend, get_panorama_views, shift_to_mask_bbox_center
-
+from util import blend, gaussian_lowpass, get_panorama_views, shift_to_mask_bbox_center
 
 if is_torch_xla_available():
-    import torch_xla.core.xla_model as xm
 
     XLA_AVAILABLE = True
 else:
@@ -183,7 +153,7 @@ class SemanticDraw3Pipeline(nn.Module):
         self.mask_type = mask_type
 
         # Create model.
-        print(f'[INFO] Loading Stable Diffusion...')
+        print('[INFO] Loading Stable Diffusion...')
         if hf_key is not None:
             print(f'[INFO] Using Hugging Face custom model key: {hf_key}')
         else:
@@ -240,7 +210,7 @@ class SemanticDraw3Pipeline(nn.Module):
         # Prepare white background for bootstrapping.
         self.get_white_background(1024, 1024)
 
-        print(f'[INFO] Model is loaded!')
+        print('[INFO] Model is loaded!')
 
     def prepare_flashflowmatch_schedule(
         self,

@@ -1,0 +1,38 @@
+[project]
+name = "semantic-draw"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "torch==2.6.0+cu124",
+    "torchvision==0.21.0+cu124",
+    "xformers",
+    "einops",
+    "transformers[torch]",
+    "huggingface_hub[torch]",
+    "Pillow",
+    "emoji",
+    "numpy<2.0",
+    "tqdm",
+    "jupyterlab",
+    "gradio",
+    "peft",
+    "sentencepiece",
+    "protobuf",
+    # "git+https://github.com/initml/diffusers.git@clement/feature/flash_sd3",
+    "diffusers>=0.34.0",
+]
+
+[tool.uv]
+environments = ["platform_machine == 'x86_64' and sys_platform == 'linux'"]
+
+[[tool.uv.index]]
+name = "pytorch-cu124"
+url = "https://download.pytorch.org/whl/cu124"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu124"}
+torchvision = { index = "pytorch-cu124" }
+triton = { index = "pytorch-cu124" }

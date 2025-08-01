@@ -18,33 +18,27 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import sys
 
-sys.path.append('../../src')
+#sys.path.append('../../src')
 
 import argparse
-import random
-import time
+import glob
 import json
 import os
-import glob
 import pathlib
+import random
+import time
 from functools import partial
 from pprint import pprint
-from multiprocessing.connection import Client, Listener
-
-import numpy as np
-from PIL import Image
-import torch
 
 import gradio as gr
-from huggingface_hub import snapshot_download
+import numpy as np
+import torch
+from PIL import Image
 
 # from model import SemanticDrawSDXL
 from model import SemanticDraw
 from util import seed_everything
-from prompt_util import preprocess_prompts, _quality_dict, _style_dict
-
 
 ### Utils
 
@@ -90,6 +84,13 @@ opt = parser.parse_args()
 ### Global variables and data structures
 
 device = f'cuda:{opt.device}' if opt.device >= 0 else 'cpu'
+print()
+print(' ===== ===== ===== ')
+print('for debug')
+print(device)
+print()
+print(' ===== ===== ===== ')
+print()
 
 
 if opt.model is None:
@@ -117,7 +118,7 @@ model = SemanticDraw(
     seedfix=True,
 )
 
-print(f'[INFO]     Parameters prepared!')
+print('[INFO]     Parameters prepared!')
 
 
 prompt_suggestions = [
@@ -685,7 +686,7 @@ css = css + added_css
 #     added_js = ''.join(f.readlines())
 # js = js + added_js
 
-head = f"""
+head = """
 <link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
 <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
 """
