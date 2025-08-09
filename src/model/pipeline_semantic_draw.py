@@ -50,6 +50,7 @@ class SemanticDrawPipeline(nn.Module):
         default_boostrap_mix_steps: float = 1.0,
         default_bootstrap_leak_sensitivity: float = 0.2,
         default_preprocess_mask_cover_alpha: float = 0.3,
+        
         t_index_list: List[int] = [0, 4, 12, 25, 37], # [0, 5, 16, 18, 20, 37], # [0, 12, 25, 37], # Magic number.
         mask_type: Literal['discrete', 'semi-continuous', 'continuous'] = 'discrete',
         has_i2t: bool = True,
@@ -126,11 +127,32 @@ class SemanticDrawPipeline(nn.Module):
         print(f'[INFO] Loading Stable Diffusion...')
         lora_weight_name = None
         if self.sd_version == '1.5':
+
+            # 利用するSDのモデルを宣言する
             if hf_key is not None:
                 print(f'[INFO] Using custom model key: {hf_key}')
                 model_key = hf_key
             else:
                 model_key = 'runwayml/stable-diffusion-v1-5'
+            
+            '''
+            'runwayml/stable-diffusion-v1-5'のコードが含む内容
+                - scheduler
+                    - json
+                - text_encoder
+                    - バイナリ
+                    - 重み
+                - tokenizer
+                    - json
+                - vae
+                    - バイナリ
+                    - 重み
+                - unet
+                    - バイナリ
+                    - 重み
+            '''
+            
+            # 利用するloraのモデルを宣言
             lora_key = 'latent-consistency/lcm-lora-sdv1-5'
             lora_weight_name = 'pytorch_lora_weights.safetensors'
         else:
@@ -141,14 +163,49 @@ class SemanticDrawPipeline(nn.Module):
             self.i2t_processor = Blip2Processor.from_pretrained('Salesforce/blip2-opt-2.7b')
             self.i2t_model = Blip2ForConditionalGeneration.from_pretrained('Salesforce/blip2-opt-2.7b')
 
+        # pipeにモデルを読み込む
         self.pipe = load_model(model_key, self.sd_version, self.device, self.dtype)
+        
+        # loraを指定しなければ、DDIMサンプラー（スケジューラー）を利用する
+
+        '''
+        <学習時>
+        - 学習率スケジューラー（cosine, constantなど）
+        - Optimizerに直接影響するもの
+
+        <推論時>
+        - ノイズスケジューラー （ノイズの量のスケジュール）
+            - beta schedule
+        - サンプラー（ノイズ除去の進め方）
+            - DDIM
+        '''
+        
+        '''
+        <DDPM>
+        - ノイズを1000stepくらいに分けて除去する
+        - 確率的なノイズ除去
+        - 推論に時間がかかる
+
+        <DDIM>
+        - 50stepでDDPMと同等の生成ができる
+        - 決定論的な写像
+        - 最低30~50stepが必要
+
+        <LCM>
+        - ノイズの量に対して一貫性があるという前提で、計算すれば4~6stepで推論できるのではないか
+        - LCMは設計段階から、少ないステップで正しい画像を出せるように訓練されている
+        '''
+
         if lora_key is None:
             print(f'[INFO] LCM LoRA is not available for SD version {sd_version}. Using DDIM Scheduler instead...')
+            # デフォルトのschedulerを上書きする
             self.pipe.scheduler = DDIMScheduler.from_config(self.pipe.scheduler.config)
             self.scheduler = self.pipe.scheduler
             self.default_num_inference_steps = 50
             self.default_guidance_scale = 7.5
         else:
+            # LCM = 高速スケジューラー
+            # LoRAがあるなら、LCMを使う = LoRAが生成の補助になると考えている
             self.pipe.scheduler = LCMScheduler.from_config(self.pipe.scheduler.config)
             self.scheduler = self.pipe.scheduler
             self.pipe.load_lora_weights(lora_key, weight_name=lora_weight_name, adapter_name='lcm')
@@ -595,6 +652,9 @@ class SemanticDrawPipeline(nn.Module):
         noise = torch.randn_like(latent) if noise is None else noise
         return self.alpha_prod_t_sqrt[idx] * latent + self.beta_prod_t_sqrt[idx] * noise
 
+    
+    # 微分計算に用いる勾配グラフは学習時のみあれば良い
+    # no_gladは、メモリの無駄なので推論時や評価時にグラフを作らないよう指示している
     @torch.no_grad()
     def sample(
         self,

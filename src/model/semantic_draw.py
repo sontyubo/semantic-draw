@@ -38,6 +38,9 @@ from data import BackgroundObject, LayerObject, BackgroundState #, LayerState
 
 
 class SemanticDraw(nn.Module):
+    '''
+    リアルタイムな生成、ストリーム処理を意識
+    '''
     def __init__(
         self,
         device: torch.device,
@@ -139,6 +142,19 @@ class SemanticDraw(nn.Module):
             'model_key': model_key,          # The Hugging Face model ID.
         }
 
+
+        '''
+        <Blip2Processor>
+        - 画像とテキストを前処理するためのツール
+            - リサイズ、正規化
+        - テキストをトークン化（単語） -> Tensorに変換 -> モデルに渡す
+        ※ この時のトークンかとは..
+            語彙表から対応するIDを取り出す的な意味
+        
+        <Blip2ForConditionalGeneration>
+        - 画像からテキスト（キャプション）を生成
+        '''
+
         # Create model
         self.i2t_processor = Blip2Processor.from_pretrained('Salesforce/blip2-opt-2.7b')
         self.i2t_model = Blip2ForConditionalGeneration.from_pretrained('Salesforce/blip2-opt-2.7b')
@@ -164,6 +180,7 @@ class SemanticDraw(nn.Module):
         self.unet = self.pipe.unet
         self.vae_scale_factor = self.pipe.vae_scale_factor
 
+        # SDのライブラリにあるスケジューラーを使用
         self.scheduler = get_scheduler(self.pipe)
         self.scheduler.set_timesteps(num_inference_steps)
 
@@ -250,6 +267,10 @@ class SemanticDraw(nn.Module):
         )
 
     def check_integrity(self, throw_error: bool = True) -> bool:
+        ''''
+        - 各レイヤーに対応するpromptの数とその他の情報が全て揃っているかの確認
+            - promptの数と、マスクの数が一致しているか など
+        '''
         p = len(self.prompts)
         flag = (
             p != len(self.negative_prompts) or
@@ -295,6 +316,9 @@ class SemanticDraw(nn.Module):
         self.ready_checklist['flushed'] = False
 
     def reset_latent(self) -> None:
+        '''
+        latentを保存しているbufferをリセット
+        '''
         # initialize x_t_latent (it can be any random tensor)
         b = (self.denoising_steps_num - 1) * self.frame_bff_size
         self.x_t_latent_buffer = torch.zeros(
@@ -1237,18 +1261,26 @@ class SemanticDraw(nn.Module):
         else:
             latent = torch.randn((1, self.unet.config.in_channels, self.latent_height, self.latent_width),
                 dtype=self.dtype, device=self.device)  # (1, 4, h, w)
+        # ランダムノイズとlatent_bufferを縦方向に結合(dim=0)
         latent = torch.cat((latent, self.x_t_latent_buffer), dim=0)  # (t, 4, h, w)
         self.stock_noise = torch.cat((self.init_noise[:1], self.stock_noise[:-1]), dim=0)  # (t, 4, h, w)
         if self.cfg_type in ('self', 'initialize'):
             self.stock_noise_ = self.stock_noise.repeat_interleave(self.num_layers, dim=0)  # (T * p, 77, 768)
 
+        # unetを使って、ノイズ除去推論
         x_0_pred_batch = self.unet_step(latent)
 
+        # x_0_pred_batchには複数のサブステップごとの推論結果が保存されている
+        # index = -1が最終的な推論結果
         latent = x_0_pred_batch[-1:]
+
+        # 次回利用するためのバッファにlatentを保存
         self.x_t_latent_buffer = (
             self.alpha_prod_t_sqrt[1:] * x_0_pred_batch[:-1]
             + self.beta_prod_t_sqrt[1:] * self.init_noise[1:]
         )
+        # self.init_noise = ステップ開始時に生成したランダムノイズ
+        # 拡散モデルの基本式（alpha_prod_t_sqrt, beta_prod_t_sqrt）
 
         # For pipeline flushing.
         if no_decode:
